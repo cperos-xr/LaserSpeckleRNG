@@ -1,97 +1,74 @@
-# SpeckleRng - The Eye of Sauron TRNG Appliance
+# SpeckleRng - The Eye of Sauron True Random Number Generator Appliance
 
-SpeckleRng transforms a standard Android phone and a 3D-printed housing into a dedicated hardware appliance for generating **true random numbers**. Unlike pseudo-random number generators (PRNGs) found in most software, SpeckleRng uses a physical, unpredictable process to generate entropy, making its output fundamentally unpredictable and suitable for security-sensitive applications.
+Have you ever looked at an old Android phone and thought, "This could be more... useful?" Do you crave random numbers so genuinely unpredictable they could be used for cryptography or scientific modeling? Look no further.
 
-This project is designed to be paired with a 3D-printed housing, which turns the entire appliance into a fun tribute to the **Eye of Sauron** from *The Lord of the Rings*.
+This project transforms a standard Android phone into **The Eye of Sauron**, a ludicrously powerful, cryptographically secure, True Random Number Generator (TRNG) appliance.
 
 ![Screenshot of the main app screen](https://raw.githubusercontent.com/cperos-xr/LaserSpeckleRNG/main/main/images/screen.jpg)
 
-## True Randomness vs. Pseudo-Randomness
+## What is This? (A True Random Number Generator)
 
-Standard random number functions (`Math.random()`, `random.range()`) are **Pseudo-Random Number Generators (PRNGs)**. They use a deterministic algorithm that is predictable and repeatable, making them unsuitable for security applications.
+Standard random functions (`Math.random()`) are just clever illusions—**Pseudo-Random Number Generators (PRNGs)**. They use predictable math that will eventually repeat, making them fine for video game sparkle effects, but unsuitable for anything requiring true unpredictability.
 
-SpeckleRng is a **True Random Number Generator (TRNG)**.
+This appliance is a **True Random Number Generator (TRNG)**.
 
-- **Entropy Source:** It derives its randomness from the chaotic, quantum-level patterns of **laser speckle** captured by the phone's camera sensor.
-- **Predictability:** The output is fundamentally unpredictable. Even with complete knowledge of all previous numbers, you cannot predict the next one.
-- **Use Cases:** Essential for cryptography, scientific modeling, high-stakes lotteries, Dungeons & Dragons, and any application where genuine unpredictability is paramount.
+- **Entropy Source:** It derives its randomness from the chaotic, quantum-level patterns of **laser speckle**. It is literally watching the universe argue with itself and writing down the results.
+- **Predictability:** The output is fundamentally unpredictable. Even with complete knowledge of all previous numbers, the next one is a total mystery.
+- **Use Cases:** Essential for cryptography, scientific modeling, high-stakes lotteries, and, of course, ensuring your D&D night is governed by truly chaotic forces.
 
-## The Hardware: The Eye of Sauron
+## The Hardware: Forging the Great Eye
 
-To create the ultimate random number generator, you need the ultimate housing. This project is designed to be used with a custom 3D-printed model available on Thingiverse.
+To complete the project, you'll need the custom 3D-printed housing, which gives the all-seeing Eye a fitting and functional home.
 
-The housing holds the Android phone and a simple laser module in perfect alignment, ensuring the camera is always focused on the laser speckle pattern. The app includes an optional "Tower" overlay that completes the look, turning your entropy generator into the all-seeing Eye of Sauron.
+**[>> Download the 3D Model from Thingiverse <<](thingiverse.com/thing:7304290)**
+
+The housing holds the phone and a simple laser module in perfect alignment. The app even includes an optional "Tower" overlay to complete the all-seeing-eye aesthetic.
 
 ![The laser setup](https://raw.githubusercontent.com/cperos-xr/LaserSpeckleRNG/main/main/images/laser.jpg)
 
-## Features
+## Key Features
 
-- **True Hardware Entropy:** Generates random numbers from the quantum-level unpredictability of laser speckle.
-- **On-Screen D&D Dice Roller:** Buttons on the main screen allow for quick, satisfying rolls of d4, d6, d8, d10, d12, d20, and d100 dice, with a large, upside-down display for easy reading.
-- **3D-Printable Housing:** A custom-designed housing on Thingiverse makes assembly easy and fun.
-- **"Eye of Sauron" Mode:** An optional tower overlay for purely aesthetic reasons.
-- **Always-On Foreground Service:** Runs 24/7, even when the app is in the background.
-- **Embedded Web Server:** A Ktor server on port 8080 exposes a RESTful API to access the random numbers from any device on your network.
-- **Live Web Interface:** A simple web UI provides a real-time view of the entropy source and system status.
-- **Comprehensive Statistical Analysis:** A PIN-protected webpage provides a Chi-Squared test and distribution charts. **Note:** This analysis is calibrated specifically for results generated in a 1-100 range.
-- **Glitch Detection:** Automatically detects and isolates sensor glitches to protect the integrity of the random data.
-- **Manual Focus Control:** A slider on the main screen provides absolute focus control to maximize entropy.
-- **Auto Power Save:** An optional mode dims the screen when the battery is low to ensure 24/7 operation.
+- **True Hardware Entropy:** Randomness forged in the fires of quantum physics.
+- **On-Screen D&D Dice Roller:** For when you need to smite a goblin with numbers blessed by chaos itself.
+- **3D-Printable Housing:** Because every good project deserves a cool case.
+- **Always-On Foreground Service:** The Great Eye is ever watchful.
+- **Embedded Web Server:** Access the Eye's chaotic whispers from any device on your network via the API.
+- **Comprehensive Statistical Analysis:** A PIN-protected page to verify that the randomness is, indeed, of the highest quality.
+- **Glitch Detection:** Automatically discards flawed data if the camera sensor has a momentary lapse.
 
-## Web API and Interface
+## The API
 
-The embedded web server provides a simple HTML interface and a powerful REST API for generating numbers and checking the system's status.
+The embedded web server provides a simple HTML interface and a powerful REST API.
 
 ![Screenshot of the web analysis page](https://raw.githubusercontent.com/cperos-xr/LaserSpeckleRNG/main/main/images/API.png)
 
-For more advanced analysis, the raw log data can be pulled and processed externally. The included `test_rng.bat` script, for example, can be used to generate thousands of numbers and perform a Chi-Squared test to verify the quality of the randomness.
-
-![Screenshot of the external analysis script](https://raw.githubusercontent.com/cperos-xr/LaserSpeckleRNG/main/main/images/stats.png)
-
 ### API Endpoints
 
-The API is divided into two categories: public endpoints for generating numbers and administrative endpoints for managing the device.
+- **`/`**: A live view into the abyss.
+- **`/status`**: Get a raw JSON status report.
+- **`/rng?min=X&max=Y`**: Generate a number in a custom range.
+- **`/help`**: A list of available commands.
+- **/d4, /d6, /d8, /d10, /d12, /d20, /d100**: Roll standard D&D dice.
+- **/coin**: Flip a coin.
 
-#### Public Endpoints
-- **`/`**: The main HTML interface, showing a live view and status.
-- **`/status`**: Get a raw JSON object of the current status.
-- **`/rng?min=X&max=Y`**: Generate a new random number within the specified range.
-- **`/help`**: Get a plain text list of all available API commands.
-- **/d4, /d6, /d8, /d10, /d12, /d20, /d100**: Get a single roll for the specified D&D die.
-- **/coin**: Flip a coin (returns a value of 1 or 2).
+### Admin Endpoints (PIN Required)
+- **`/log?pin=PIN`**: View the raw log of all generated numbers.
+- **`/analysis?pin=PIN`**: View the Chi-Squared test and other stats.
 
-#### Admin Endpoints
-- **`/log?pin=PIN`**: View the complete, raw log of all generated receipts.
-- **`/analysis?pin=PIN`**: View the statistical analysis and randomness report.
-- **`/clear_log?pin=PIN`**: Delete all logs and duplicate frame records.
-- **`/duplicates?pin=PIN`**: View links to any saved glitched frames.
+**Note on the PIN:** The admin endpoints are protected by a PIN (`123456`), which is displayed on the device's screen. This is to prevent you from *accidentally* deleting your precious data, not to stop a determined thief.
 
-**Note on the PIN:** The administrative endpoints are protected by a hardcoded PIN (`123456`) to prevent casual tampering. This PIN is displayed on the device's screen for your convenience. This is not a high-security measure but is intended to prevent accidental data deletion.
+## How to Summon the Eye
 
-### API Examples (using `curl`)
+1.  **Print the Housing:** Download the model from Thingiverse.
+2.  **Assemble the Hardware:** Install a laser module and your phone.
+3.  **Install the App:** Go to the [**official GitHub repository**](https://github.com/cperos-xr/LaserSpeckleRNG) and download the latest pre-compiled `.apk` file from the **Releases** section on the right-hand side.
+4.  **Connect to Wi-Fi** on the same network as your computer.
+5.  **Focus the Laser:** Use the on-screen slider until the speckle pattern is sharp.
+6.  **Roll the Dice!** Use the on-screen buttons or the API.
 
-Replace `YOUR_DEVICE_IP` with the IP address shown on the app's screen.
+## Troubleshooting
 
-**Get the current status:**
-```bash
-curl http://YOUR_DEVICE_IP:8080/status
-```
+Can't connect to the API from another device? Network settings can sometimes be tricky.
 
-**Roll a d20:**
-```bash
-curl http://YOUR_DEVICE_IP:8080/d20
-```
-
-**View the statistical analysis:**
-```bash
-curl "http://YOUR_DEVICE_IP:8080/analysis?pin=123456"
-```
-
-## How to Use
-
-1.  **Print the Housing:** Download the model from Thingiverse and 3D print it.
-2.  **Assemble the Hardware:** Install a standard 5V laser module and your Android phone into the housing.
-3.  **Install the App:** Get the Android application from the official GitHub repository: [https://github.com/cperos-xr/LaserSpeckleRNG](https://github.com/cperos-xr/LaserSpeckleRNG)
-4.  **Connect to Wi-Fi:** Ensure the device is on the same Wi-Fi network as the computer you want to access the API from.
-5.  **Focus the Laser:** Use the on-screen slider to manually adjust the camera's focus until the speckle pattern is sharp, maximizing the entropy.
-6.  **Roll the Dice:** Use the on-screen buttons or the API to generate true random numbers.
+- **Check for AP/Client Isolation:** Many routers prevent devices on the same Wi-Fi network from talking to each other. Log into your router's settings and disable any feature called "AP Isolation," "Client Isolation," or "Guest Mode."
+- **The Ol' On-and-Off:** Sometimes, simply toggling your phone's Wi-Fi or Airplane Mode is enough to appease the network spirits.
