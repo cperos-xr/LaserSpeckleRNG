@@ -1,4 +1,4 @@
-# SpeckleRng - The Eye of Sauron TRNG Appliance
+# SpeckleRng - The Eye of Sauron True Random Number Generator Appliance
 
 Have you ever looked at an old Android phone and thought, "This could be more... useful?" Do you crave random numbers so genuinely unpredictable they could be used for cryptography or scientific modeling? Look no further.
 
@@ -20,7 +20,7 @@ This appliance is a **True Random Number Generator (TRNG)**.
 
 To complete the project, you'll need the custom 3D-printed housing, which gives the all-seeing Eye a fitting and functional home.
 
-**[>> Download the 3D Model from Thingiverse <<](https://www.thingiverse.com/thing:7304290)**
+**[>> Download the 3D Model from Thingiverse <<](thingiverse.com/thing:7304290)**
 
 The housing holds the phone and a simple laser module in perfect alignment. The app even includes an optional "Tower" overlay to complete the all-seeing-eye aesthetic.
 
