@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.overlayText.text = "Waiting for service..."
-        binding.urlText.text = getDeviceIpAddress()
+        binding.urlText.text = "${getDeviceIpAddress()}:8081"
         binding.pinText.text = "Admin PIN: 123456"
         binding.diceResultText.setShadowLayer(10f, 0f, 0f, Color.BLACK)
 

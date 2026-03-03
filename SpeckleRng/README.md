@@ -32,13 +32,22 @@ The housing holds the phone and a simple laser module in perfect alignment. The 
 - **On-Screen D&D Dice Roller:** For when you need to smite a goblin with numbers blessed by chaos itself.
 - **3D-Printable Housing:** Because every good project deserves a cool case.
 - **Always-On Foreground Service:** The Great Eye is ever watchful.
-- **Embedded Web Server:** Access the Eye's chaotic whispers from any device on your network via the API.
+- **Embedded Web Server:** Access the Eye's chaotic whispers from any device on your network via the API (default port `8081`).
 - **Comprehensive Statistical Analysis:** A PIN-protected page to verify that the randomness is, indeed, of the highest quality.
 - **Glitch Detection:** Automatically discards flawed data if the camera sensor has a momentary lapse.
 
+## Power Management
+
+To ensure the appliance can run for extended periods without manual intervention, a robust power management system is included:
+
+-   **Normal (>50%):** Brightness remains at the user's original setting.
+-   **Low Power (10-50%):** Brightness scales down linearly from 50% to a dim 5% as the battery drains.
+-   **Critical (<10%):** If not charging, the screen turns off completely to maximize the service's runtime.
+-   **Charging:** The screen will stay off until it reaches 100%, at which point it will restore to its original brightness.
+
 ## The API
 
-The embedded web server provides a simple HTML interface and a powerful REST API.
+The embedded web server (running on port **8081**) provides a simple HTML interface and a powerful REST API.
 
 ![Screenshot of the web analysis page](https://raw.githubusercontent.com/cperos-xr/LaserSpeckleRNG/main/main/images/API.png)
 
