@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var isPowerSaveEnabled = false
     private var originalBrightness: Float = 0.5f
     private val resultDisplayHandler = Handler(Looper.getMainLooper())
+    private var isScreenOffForCharging = false
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -57,16 +58,45 @@ class MainActivity : AppCompatActivity() {
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (isPowerSaveEnabled) {
-                val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
-                val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-                val batteryPct = level * 100 / scale.toFloat()
+            val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            val batteryPct = level * 100 / scale.toFloat()
 
-                if (batteryPct < 20) {
-                    setScreenBrightness(0.05f) // Dim screen
-                } else {
-                    setScreenBrightness(originalBrightness) // Restore brightness
+            val status = intent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+
+            if (!isPowerSaveEnabled) {
+                if (isScreenOffForCharging) {
+                    setScreenBrightness(originalBrightness)
+                    isScreenOffForCharging = false
                 }
+                return
+            }
+
+            if (isScreenOffForCharging) {
+                if (isCharging && batteryPct >= 100f) { // 100% charged
+                    isScreenOffForCharging = false
+                    setScreenBrightness(originalBrightness)
+                } else if (!isCharging) {
+                    isScreenOffForCharging = false
+                } else {
+                    setScreenBrightness(0f)
+                    return
+                }
+            }
+
+            if (batteryPct < 10f && !isCharging) { // Critical: under 10% and not charging
+                setScreenBrightness(0f)
+                isScreenOffForCharging = true
+            } else if (batteryPct < 50f) { // Low: 10% to 50%
+                val minBrightness = 0.05f
+                val maxBrightness = originalBrightness * 0.5f
+                val minBattery = 10f
+                val maxBattery = 50f
+                val brightness = minBrightness + ((batteryPct - minBattery) / (maxBattery - minBattery)) * (maxBrightness - minBrightness)
+                setScreenBrightness(brightness.coerceIn(minBrightness, maxBrightness))
+            } else { // Normal: over 50%
+                setScreenBrightness(originalBrightness)
             }
         }
     }
@@ -103,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             isPowerSaveEnabled = isChecked
             if (!isChecked) {
                 setScreenBrightness(originalBrightness) // Restore brightness when disabled
+                isScreenOffForCharging = false
             }
         }
 

@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set "API=http://192.168.0.50:8080/rng?min=1&max=100"
+set "API=http://192.168.0.50:8081/rng?min=1&max=100"
 set "COUNT=10000"
 set "RESULTS="
 

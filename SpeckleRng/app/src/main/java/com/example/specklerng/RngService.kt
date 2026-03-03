@@ -4,10 +4,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.wifi.WifiManager
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.util.LruCache
@@ -41,6 +43,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.apache.commons.math3.distribution.ChiSquaredDistribution
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.net.BindException
 import java.nio.ByteBuffer
 import java.security.MessageDigest
 import java.util.concurrent.Executors
@@ -89,7 +92,7 @@ class RngService : LifecycleService() {
         """.trimIndent()
 
     private val server by lazy {
-        embeddedServer(Netty, port = 8080) {
+        embeddedServer(Netty, port = 8081) {
             install(ContentNegotiation) {
                 json()
             }
@@ -222,12 +225,23 @@ class RngService : LifecycleService() {
         duplicatesDir = File(cacheDir, "duplicates")
         if (!duplicatesDir.exists()) duplicatesDir.mkdirs()
         createNotificationChannel()
-        startForeground(1, createNotification())
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, createNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA)
+        } else {
+            startForeground(1, createNotification())
+        }
+
         acquireWifiLock()
         startCamera()
         Thread {
-            serverStartTime = System.currentTimeMillis()
-            server.start(wait = true)
+            try {
+                serverStartTime = System.currentTimeMillis()
+                server.start(wait = true)
+            } catch (e: Exception) {
+                Log.e("RngService", "Failed to start Ktor server", e)
+                // If the port is busy, the app won't crash now, but the API won't work.
+            }
         }.start()
     }
 
@@ -588,7 +602,11 @@ class RngService : LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
         wifiLock?.release()
-        server.stop(1000, 5000)
+        try {
+            server.stop(1000, 5000)
+        } catch (e: Exception) {
+            Log.e("RngService", "Error stopping server", e)
+        }
         cameraExecutor.shutdown()
     }
 
